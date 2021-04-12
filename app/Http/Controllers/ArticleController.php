@@ -84,9 +84,9 @@ class ArticleController extends Controller
     public function changeStatus($id, Request $request)
     {
         $article = Article::find($id);
-        $article->active = $request->input('active');
+        $article->active = !$article->active;
         $article->save();
-        return response()->json('Registro actualizado con exito.');
+        return response()->json(["message"=>'Registro actualizado con exito.', "value"=> $article->active]);
     }
     /**
      * Remove the specified resource from storage.

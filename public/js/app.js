@@ -1975,6 +1975,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2040,11 +2043,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
-    articleName: function articleName(name) {
-      var names = name.split(' ');
-      var finalName = names.join('_');
-      return finalName;
-    },
     openImage: function openImage(e) {
       window.open(e.target.src);
     },
@@ -2575,32 +2573,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: {
-    articleId: Number,
-    articleName: String
+  data: function data() {
+    return {
+      article: {
+        name: '',
+        stock: 0,
+        price: 0.00,
+        description: ''
+      }
+    };
   },
   created: function () {
     var _created = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-      var vm, response;
+      var id, response;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              vm = this;
+              id = this.$route.params.id;
               _context.next = 3;
-              return vm.axios.get("/articles/".concat(this.articleId));
+              return this.axios.get("/articles/".concat(id));
 
             case 3:
               response = _context.sent;
-              vm.article = response.data;
+              this.article = response.data;
 
             case 5:
             case "end":
@@ -2616,48 +2613,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     return created;
   }(),
-  data: function data() {
-    return {
-      article: {}
-    };
-  },
   methods: {
     changeStatus: function () {
       var _changeStatus = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var vm, response, errors;
+        var response, errors;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                vm = this;
-                console.log(vm.article);
-                _context2.prev = 2;
-                _context2.next = 5;
-                return vm.axios.patch("/articles/".concat(vm.article.id, "/status"), {
-                  active: !vm.article.active
-                });
+                _context2.prev = 0;
+                _context2.next = 3;
+                return this.axios.patch("/articles/".concat(this.article.id, "/status"));
 
-              case 5:
+              case 3:
                 response = _context2.sent;
-                alert(response.data);
-                _context2.next = 13;
+                this.article.active = response.data.value;
+                setTimeout(function () {
+                  alert(response.data.message);
+                }, 300);
+                _context2.next = 12;
                 break;
 
-              case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](2);
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
                 errors = _context2.t0.response.data.errors;
                 console.log(errors);
 
-              case 13:
-                this.$emit('changeStatus', this.article.active);
-
-              case 14:
+              case 12:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[2, 9]]);
+        }, _callee2, this, [[0, 8]]);
       }));
 
       function changeStatus() {
@@ -2796,6 +2784,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ArticleList_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/ArticleList.vue */ "./resources/js/components/ArticleList.vue");
 /* harmony import */ var _components_CreateArticle_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/CreateArticle.vue */ "./resources/js/components/CreateArticle.vue");
 /* harmony import */ var _components_EditArticle_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/EditArticle.vue */ "./resources/js/components/EditArticle.vue");
+/* harmony import */ var _components_ShowArticle_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/ShowArticle.vue */ "./resources/js/components/ShowArticle.vue");
+
 
 
 
@@ -2811,6 +2801,10 @@ var routes = [{
   name: 'edit',
   path: '/edit/:id',
   component: _components_EditArticle_vue__WEBPACK_IMPORTED_MODULE_2__.default
+}, {
+  name: 'show',
+  path: '/show/:id',
+  component: _components_ShowArticle_vue__WEBPACK_IMPORTED_MODULE_3__.default
 }];
 
 /***/ }),
@@ -42350,128 +42344,107 @@ var render = function() {
             _c(
               "tbody",
               _vm._l(_vm.articles, function(article) {
-                return _c(
-                  "tr",
-                  { key: article.id },
-                  [
-                    _c("td", [_vm._v(_vm._s(article.id))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(article.name))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v("$" + _vm._s(article.price))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(article.stock))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm._v(_vm._s(article.active ? "Activo" : "Inactivo"))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("img", {
-                        staticClass: "table_image",
-                        attrs: { src: article.article_image },
-                        on: {
-                          click: function($event) {
-                            return _vm.openImage($event)
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c(
-                        "div",
-                        { staticClass: "btn-group" },
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "btn btn-success",
-                              attrs: {
-                                to: { name: "edit", params: { id: article.id } }
-                              }
-                            },
-                            [
-                              _c("feather", {
-                                staticClass: "d-block",
-                                attrs: { type: "edit", size: "20" }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-warning",
-                              attrs: {
-                                "data-toggle": "modal",
-                                "data-target":
-                                  "#" +
-                                  _vm.articleName(article.name) +
-                                  article.id
-                              }
-                            },
-                            [
-                              _c("feather", {
-                                staticClass: "text-white d-block",
-                                attrs: { type: "eye", size: "20" }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-danger",
-                              attrs: { disabled: _vm.isDeleting },
-                              on: {
-                                click: function($event) {
-                                  return _vm.deleteArticle(article.id)
-                                }
-                              }
-                            },
-                            [
-                              _vm.isDeleting
-                                ? _c("span", {
-                                    staticClass:
-                                      "spinner-border spinner-border-sm",
-                                    attrs: {
-                                      role: "status",
-                                      "aria-hidden": "true"
-                                    }
-                                  })
-                                : _vm._e(),
-                              _vm._v(" "),
-                              !_vm.isDeleting
-                                ? _c("feather", {
-                                    staticClass: "d-block",
-                                    attrs: { type: "trash-2", size: "20" }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("ShowArticle", {
-                      attrs: {
-                        articleId: article.id,
-                        articleName: _vm.articleName(article.name)
-                      },
+                return _c("tr", { key: article.id }, [
+                  _c("td", [_vm._v(_vm._s(article.id))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(article.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("$" + _vm._s(article.price))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(article.stock))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(article.active ? "Activo" : "Inactivo"))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("img", {
+                      staticClass: "table_image",
+                      attrs: { src: article.article_image },
                       on: {
-                        changeStatus: function($event) {
-                          article.active = $event
+                        click: function($event) {
+                          return _vm.openImage($event)
                         }
                       }
                     })
-                  ],
-                  1
-                )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "div",
+                      { staticClass: "btn-group" },
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "btn btn-success",
+                            attrs: {
+                              to: { name: "edit", params: { id: article.id } }
+                            }
+                          },
+                          [
+                            _c("feather", {
+                              staticClass: "d-block",
+                              attrs: { type: "edit", size: "20" }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "btn btn-warning",
+                            attrs: {
+                              to: { name: "show", params: { id: article.id } }
+                            }
+                          },
+                          [
+                            _c("feather", {
+                              staticClass: "text-white d-block",
+                              attrs: { type: "eye", size: "20" }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger",
+                            attrs: { disabled: _vm.isDeleting },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteArticle(article.id)
+                              }
+                            }
+                          },
+                          [
+                            _vm.isDeleting
+                              ? _c("span", {
+                                  staticClass:
+                                    "spinner-border spinner-border-sm",
+                                  attrs: {
+                                    role: "status",
+                                    "aria-hidden": "true"
+                                  }
+                                })
+                              : _vm._e(),
+                            _vm._v(" "),
+                            !_vm.isDeleting
+                              ? _c("feather", {
+                                  staticClass: "d-block",
+                                  attrs: { type: "trash-2", size: "20" }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                ])
               }),
               0
             ),
@@ -43123,153 +43096,71 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "modal fade",
-      attrs: { id: "" + _vm.articleName + _vm.article.id, tabindex: "-1" }
-    },
-    [
-      _c("div", { staticClass: "modal-dialog" }, [
-        _c("div", { staticClass: "modal-content" }, [
-          _c("div", { staticClass: "modal-body" }, [
-            _c("div", { staticClass: "card mb-3" }, [
-              _c("img", {
-                staticClass: "card-img-top",
-                attrs: { src: _vm.article.article_image, alt: "..." }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _c("h5", { staticClass: "card-title" }, [
-                  _vm._v(
-                    "\n                            " +
-                      _vm._s(_vm.article.name) +
-                      "\n                            "
-                  ),
-                  _c(
-                    "span",
-                    { staticClass: "p-2 badge badge-pill badge-dark" },
-                    [_vm._v("$ " + _vm._s(_vm.article.price))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("p", { staticClass: "card-text" }, [
-                  _vm._v(_vm._s(_vm.article.description))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "d-flex justify-content-between" }, [
-                  _c("p", { staticClass: "card-text" }, [
-                    _vm._v("Cantidad: "),
-                    _c(
-                      "span",
-                      { staticClass: "p-2 badge badge-pill badge-primary" },
-                      [_vm._v(_vm._s(_vm.article.stock))]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "ml-auto custom-control custom-switch" },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.article.active,
-                            expression: "article.active"
-                          }
-                        ],
-                        staticClass: "custom-control-input",
-                        attrs: {
-                          type: "checkbox",
-                          name: "active",
-                          id: "active"
-                        },
-                        domProps: {
-                          checked: Array.isArray(_vm.article.active)
-                            ? _vm._i(_vm.article.active, null) > -1
-                            : _vm.article.active
-                        },
-                        on: {
-                          change: [
-                            function($event) {
-                              var $$a = _vm.article.active,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.article,
-                                      "active",
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.article,
-                                      "active",
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(_vm.article, "active", $$c)
-                              }
-                            },
-                            function($event) {
-                              return _vm.changeStatus()
-                            }
-                          ]
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "custom-control-label",
-                          attrs: { for: "active" }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(_vm.article.active ? "Activo" : "Inactivo")
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ])
-              ])
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-12 col-sm-6 mx-auto" }, [
+      _c("div", { staticClass: "card mb-3" }, [
+        _c("img", {
+          staticClass: "card-img-top",
+          attrs: { src: _vm.article.article_image, alt: "..." }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c("h5", { staticClass: "card-title" }, [
+            _vm._v(
+              "\n                    " +
+                _vm._s(_vm.article.name) +
+                "\n                    "
+            ),
+            _c("span", { staticClass: "p-2 badge badge-pill badge-dark" }, [
+              _vm._v("$ " + _vm._s(_vm.article.price))
             ])
           ]),
           _vm._v(" "),
-          _vm._m(0)
+          _c("p", { staticClass: "card-text" }, [
+            _vm._v(_vm._s(_vm.article.description))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "d-flex justify-content-between" }, [
+            _c("p", { staticClass: "card-text" }, [
+              _vm._v("Cantidad: "),
+              _c(
+                "span",
+                { staticClass: "p-2 badge badge-pill badge-primary" },
+                [_vm._v(_vm._s(_vm.article.stock))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "ml-auto custom-control custom-switch" }, [
+              _c("input", {
+                staticClass: "custom-control-input",
+                attrs: { type: "checkbox", name: "active", id: "active" },
+                domProps: {
+                  value: _vm.article.active,
+                  checked: _vm.article.active
+                },
+                on: {
+                  change: function($event) {
+                    return _vm.changeStatus()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "label",
+                {
+                  staticClass: "custom-control-label",
+                  attrs: { for: "active" }
+                },
+                [_vm._v(_vm._s(_vm.article.active ? "Activo" : "Inactivo"))]
+              )
+            ])
+          ])
         ])
       ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-danger",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Cerrar")]
-      )
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

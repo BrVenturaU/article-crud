@@ -30,17 +30,20 @@
                         </td>
                         <td>
                             <div class="btn-group">
-                                <router-link :to="{name:'edit', params:{id: article.id}}" class="btn btn-success"><feather class="d-block" type="edit" size="20"></feather></router-link>
-                                <button class="btn btn-warning" data-toggle="modal" :data-target="`#${articleName(article.name)}${article.id}`">
+                                <router-link :to="{name:'edit', params:{id: article.id}}" class="btn btn-success">
+                                    <feather class="d-block" type="edit" size="20"></feather>
+                                </router-link>
+                                
+                                <router-link :to="{name:'show', params:{id: article.id}}" class="btn btn-warning">
                                     <feather class="text-white d-block" type="eye" size="20"></feather>
-                                </button>
+                                </router-link>
+
                                 <button class="btn btn-danger" :disabled="isDeleting" @click="deleteArticle(article.id)">
                                      <span v-if="isDeleting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                      <feather class="d-block" v-if="!isDeleting" type="trash-2" size="20"></feather>
                                 </button>
                             </div>
                         </td>
-                        <ShowArticle :articleId="article.id" :articleName="articleName(article.name)" @changeStatus="article.active = $event"></ShowArticle>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -81,7 +84,7 @@
     
 </template>
 <script>
-import ShowArticle from './ShowArticle.vue';
+import ShowArticle from './ShowArticle.vue'
 export default {
     components:{
         ShowArticle
@@ -122,11 +125,6 @@ export default {
         }
     },
     methods: {
-        articleName(name){
-            let names = name.split(' ');
-            let finalName = names.join('_');
-            return finalName;
-        },
         openImage(e){
             window.open(e.target.src);
         },
