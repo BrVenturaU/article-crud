@@ -2389,6 +2389,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2396,14 +2403,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: '',
         stock: 0,
         price: 0.00,
-        description: ''
+        description: '',
+        image: ''
       },
       errors: {
         name: [],
         stock: [],
         price: [],
-        description: []
-      }
+        description: [],
+        image: []
+      },
+      hasImageChange: false
     };
   },
   created: function () {
@@ -2437,86 +2447,104 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return created;
   }(),
   methods: {
+    onChangeImage: function onChangeImage(e) {
+      this.hasImageChange = true;
+      this.article.image = e.target.files[0];
+      var artImage = document.getElementById('artImage');
+      var url = URL.createObjectURL(e.target.files[0]);
+      artImage.src = url;
+    },
     editArticle: function () {
       var _editArticle = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var vm, id, response, errors, key, element;
+        var vm, id, data, response, errors, key, element;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 vm = this;
                 id = vm.$route.params.id;
-                _context2.prev = 2;
-                _context2.next = 5;
-                return vm.axios.patch("/articles/".concat(id), {
-                  name: vm.article.name,
-                  description: vm.article.description,
-                  stock: parseInt(vm.article.stock),
-                  price: parseFloat(vm.article.price)
+                data = new FormData();
+                data.append("_method", 'PATCH');
+                data.append('name', vm.article.name);
+                data.append('description', vm.article.description);
+                data.append('price', vm.article.price);
+                data.append('stock', vm.article.stock);
+                if (vm.hasImageChange) data.append('image', vm.article.image);
+                _context2.prev = 9;
+                _context2.next = 12;
+                return vm.axios.post("/articles/".concat(id), data, {
+                  headers: {
+                    "Content-Type": "multipart/form-data"
+                  }
                 });
 
-              case 5:
+              case 12:
                 response = _context2.sent;
                 alert(response.data);
                 vm.$router.push({
                   name: 'home'
                 });
-                _context2.next = 32;
+                _context2.next = 42;
                 break;
 
-              case 10:
-                _context2.prev = 10;
-                _context2.t0 = _context2["catch"](2);
+              case 17:
+                _context2.prev = 17;
+                _context2.t0 = _context2["catch"](9);
                 errors = _context2.t0.response.data.errors;
+                console.log(errors);
                 _context2.t1 = _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().keys(errors);
 
-              case 14:
+              case 22:
                 if ((_context2.t2 = _context2.t1()).done) {
-                  _context2.next = 32;
+                  _context2.next = 42;
                   break;
                 }
 
                 key = _context2.t2.value;
 
                 if (!Object.hasOwnProperty.call(errors, key)) {
-                  _context2.next = 30;
+                  _context2.next = 40;
                   break;
                 }
 
                 element = errors[key];
                 _context2.t3 = key;
-                _context2.next = _context2.t3 === 'name' ? 21 : _context2.t3 === 'description' ? 23 : _context2.t3 === 'price' ? 25 : _context2.t3 === 'stock' ? 27 : 29;
+                _context2.next = _context2.t3 === 'name' ? 29 : _context2.t3 === 'description' ? 31 : _context2.t3 === 'price' ? 33 : _context2.t3 === 'stock' ? 35 : _context2.t3 === 'image' ? 37 : 39;
                 break;
-
-              case 21:
-                vm.errors.name = element;
-                return _context2.abrupt("break", 30);
-
-              case 23:
-                vm.errors.description = element;
-                return _context2.abrupt("break", 30);
-
-              case 25:
-                vm.errors.price = element;
-                return _context2.abrupt("break", 30);
-
-              case 27:
-                vm.errors.stock = element;
-                return _context2.abrupt("break", 30);
 
               case 29:
-                return _context2.abrupt("break", 30);
+                vm.errors.name = element;
+                return _context2.abrupt("break", 40);
 
-              case 30:
-                _context2.next = 14;
+              case 31:
+                vm.errors.description = element;
+                return _context2.abrupt("break", 40);
+
+              case 33:
+                vm.errors.price = element;
+                return _context2.abrupt("break", 40);
+
+              case 35:
+                vm.errors.stock = element;
+                return _context2.abrupt("break", 40);
+
+              case 37:
+                vm.errors.image = element;
+                return _context2.abrupt("break", 40);
+
+              case 39:
+                return _context2.abrupt("break", 40);
+
+              case 40:
+                _context2.next = 22;
                 break;
 
-              case 32:
+              case 42:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[2, 10]]);
+        }, _callee2, this, [[9, 17]]);
       }));
 
       function editArticle() {
@@ -42767,13 +42795,17 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "form-group" },
+            { staticClass: "form-group custom-file" },
             [
-              _c("label", { attrs: { for: "image" } }, [_vm._v("Imagen")]),
+              _c(
+                "label",
+                { staticClass: "custom-file-label", attrs: { for: "image" } },
+                [_vm._v("Imagen")]
+              ),
               _vm._v(" "),
               _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "file", id: "image", name: "image" },
+                staticClass: "custom-file-input",
+                attrs: { type: "file", id: "image", name: "image", lang: "es" },
                 on: {
                   change: function($event) {
                     return _vm.onChangeImage($event)
@@ -42877,7 +42909,7 @@ var render = function() {
         "form",
         {
           staticClass: "needs-validation",
-          attrs: { novalidate: "" },
+          attrs: { novalidate: "", enctype: "multipart/form-data" },
           on: {
             submit: function($event) {
               $event.preventDefault()
@@ -42905,6 +42937,7 @@ var render = function() {
                 attrs: {
                   type: "text",
                   id: "name",
+                  name: "name",
                   required: "",
                   placeholder: "Nombre..."
                 },
@@ -43064,10 +43097,45 @@ var render = function() {
           ),
           _vm._v(" "),
           _c(
+            "div",
+            { staticClass: "form-group custom-file mb-3" },
+            [
+              _c(
+                "label",
+                { staticClass: "custom-file-label", attrs: { for: "image" } },
+                [_vm._v(_vm._s(_vm.article.name))]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "custom-file-input",
+                attrs: { type: "file", id: "image", name: "image", lang: "es" },
+                on: {
+                  change: function($event) {
+                    return _vm.onChangeImage($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._l(_vm.errors.image, function(error, index) {
+                return _c("span", { key: index, staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(error))
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
             "button",
             { staticClass: "btn btn-primary", attrs: { type: "submit" } },
             [_vm._v("Guardar")]
-          )
+          ),
+          _vm._v(" "),
+          _c("img", {
+            staticClass: "rounded mx-auto d-block",
+            staticStyle: { width: "50%", height: "50%" },
+            attrs: { id: "artImage", src: _vm.article.article_image }
+          })
         ]
       )
     ])

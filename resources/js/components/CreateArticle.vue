@@ -19,9 +19,9 @@
                     <input type="number" id="price" name="price" class="form-control" min="0" step="0.01" required placeholder="$0.00" v-model="article.price">
                     <span v-for="(error, index) of errors.price" :key="index" class="text-danger">{{error}}</span>
                 </div>
-                <div class="form-group">
-                    <label for="image">Imagen</label>
-                    <input type="file" id="image" name="image" class="form-control" @change="onChangeImage($event)">
+                <div class="form-group custom-file">
+                    <label for="image" class="custom-file-label">Imagen</label>
+                    <input type="file" id="image" name="image" class="custom-file-input" lang="es" @change="onChangeImage($event)">
                     <span v-for="(error, index) of errors.image" :key="index" class="text-danger">{{error}}</span>
                 </div>
                 <div class="form-group">

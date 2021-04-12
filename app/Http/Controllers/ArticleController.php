@@ -73,11 +73,20 @@ class ArticleController extends Controller
             'name' => 'required|max:50',
             'description' => 'required|max:255',
             'price' => 'required',
-            'stock' => 'required|integer',  
+            'stock' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'  
         ]);
 
         $article = Article::find($id);
-        $article->update($request->all());
+        $article->update($request->except('image'));
+        if($request->file()){
+            $image = $request->file('image');
+            $fileName = time().'_'.$image->getClientOriginalName();
+            $filePath = $image->storeAs('images', $fileName, 'public');
+            $article->image = $filePath;
+        }
+
+        $article->save();
         return response()->json('Registro actualizado con exito.');
     }
 
